@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <div class="row">
+        <div class="col-md-8">
+            <h3>{{ calendar.title }} {{ calendar.seasons_pretty }} Season Calendar</h3>
+        </div>
+        <div class="col-md-4"><em>as of {{ calendar.as_of.strftime('%Y-%m-%d') }}</em></div>
+    </div>
+    <table class="table table-hover table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Dste</th>
+                <th scope="col">Event</th>
+                <th scope="col">Location</th>
+                <th scope="col">Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in calendar.events %}
+                <tr class="{{event.row_class}}" style="{{event.style}}">
+                    <td>{{event.date_pretty}}</td>
+                    <td>{{event.summary}}</td>
+                    <td>{{event.location}}</td>
+                    <td>{{event.time_pretty}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br />
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Locations</h3>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <tbody>
+            {% for short_name, full_location in calendar.address_book.items() %}
+                <tr>
+                    <th scope="row">{{short_name}}</th>
+                    <td>{{full_location}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
