@@ -13,6 +13,7 @@ from app.event import Event
 DEFAULT_TIME_ZONE = 'America/New_York'
 DEFAULT_GROUP = 'EVERYONE'
 
+
 class AddressBook(SortedDict):
     def enrich(self, short_name, full_location):
         full_address = full_location.replace(short_name + ', ', '')
@@ -42,12 +43,13 @@ class ChorusCalendar(object):
           tz (dateutil.zoneinfo.tzfile): TZ in which to render events
           events (:obj:`list` of :obj:`Event`): the actual contents of the calendar
     """
-    def __init__(self, title, as_of, tz, events, address_book=AddressBook()):
+
+    def __init__(self, title, as_of, tz, events, address_book=None):
         self.title = title
         self.as_of = as_of
         self.tz = tz
         self.events = events
-        self.address_book = address_book
+        self.address_book = address_book or AddressBook()
 
     def filter_seasons(self, seasons: List[str]):
         events = [e for e in self.events if e.season in seasons]
@@ -158,6 +160,3 @@ def _parse_description(description):
     if not groups:
         groups.add(DEFAULT_GROUP)
     return info, concert, groups
-
-
-

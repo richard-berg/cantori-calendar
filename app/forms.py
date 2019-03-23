@@ -3,6 +3,7 @@ from wtforms import StringField, SubmitField, SelectMultipleField
 from wtforms.validators import URL, ValidationError
 
 
+# noinspection PyUnusedLocal
 def url_is_webcal(form, field):
     if not field.data.startswith('webcal://'):
         raise ValidationError('URL must start with webcal://')
