@@ -1,5 +1,16 @@
 {% extends 'bootstrap/base.html' %}
 
+{% block head %}
+{{super()}}
+<style type="text/css">
+  @media print {
+    .table td {
+      background-color: transparent !important;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
     <div class="container">
         {% with messages = get_flashed_messages() %}
