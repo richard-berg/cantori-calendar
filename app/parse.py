@@ -11,7 +11,7 @@ from sortedcontainers import SortedDict
 from app.event import Event
 
 DEFAULT_TIME_ZONE = 'America/New_York'
-
+DEFAULT_GROUP = 'EVERYONE'
 
 class AddressBook(SortedDict):
     def enrich(self, short_name, full_location):
@@ -21,19 +21,12 @@ class AddressBook(SortedDict):
                             full_address, self[short_name])
         self[short_name] = full_address
 
-    KNOWN_PLACES = frozenset({'Interchurch', 'Ripley Grier', 'St Luke', 'Quantedge', 'Holy Apostle'})
-
     def shorten_location(self, location):
         # Derive the shorthand alias for a given location, while storing the full location name into the address
         # book (so a glossary can be provided later)
         if ',' not in (location or ''):
             return location
         short_name = location.split(',')[0]
-        for kp in self.KNOWN_PLACES:
-            if kp in short_name:
-                self.enrich(kp, location)
-                return kp
-
         self.enrich(short_name, location)
         return short_name
 
@@ -61,7 +54,7 @@ class ChorusCalendar(object):
         return ChorusCalendar(self.title, self.as_of, self.tz, events)
 
     def filter_groups(self, groups: List[str]):
-        events = [e for e in self.events if not e.groups or e.groups.intersection(groups)]
+        events = [e for e in self.events if e.groups.intersection(groups)]
         return ChorusCalendar(self.title, self.as_of, self.tz, events)
 
     def collapse_call_times(self):
@@ -162,6 +155,8 @@ def _parse_description(description):
             concert = line.replace('Concert: ', '')
         elif line.startswith('Group: '):
             groups = set(line.replace('Group: ', '').split(', '))
+    if not groups:
+        groups.add(DEFAULT_GROUP)
     return info, concert, groups
 
 
